@@ -12,10 +12,10 @@ def main(
     credentials = utils.create_service_account_credentials(api_config)
     youtube_resource = utils.create_youtube_api_resource(api_config, credentials)
 
-    # identify channel
+    # get channel data
     response_channel = utils.get_channel_info(youtube_resource, channel_id)
 
-    # identify uploads playlist, pull all videos
+    # identify uploads playlist, get metadata for all videos uploaded to channel
     uploads_playlist_id = utils.parse_channel_uploads_playlist_id(response_channel)
     all_video_metadata = utils.paginate_all_channel_uploads(youtube_resource, uploads_playlist_id)
 
@@ -33,6 +33,6 @@ if __name__ == "__main__":
     # pull channel & video data from target YouTube Channel and store to indicated folder in repo
     cli_args = utils.attach_cli_args_to_main()
     main(
-        channel_id=cli_args["channel_id"],
-        channel_folder_name=cli_args["channel_folder_name"]
+        channel_id=cli_args.channel_id,
+        channel_folder_name=cli_args.channel_folder_name
     )

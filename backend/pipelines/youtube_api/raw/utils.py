@@ -90,8 +90,16 @@ def write_object_to_json_gzip_file(object: Union[dict, List[dict]], file_path: s
         print(f"Object written to {file_path}")
 
 
-def attach_cli_args_to_main() -> argparse.Namespace:
-        parser = argparse.ArgumentParser(description="")
-        parser.add_argument('--channel_id', type=str, default="UCebh6Np0l-DT9LXHrXbmopg", help="Provide YouTube Channel ID as a string")
-        parser.add_argument('--channel_folder_name', type=str, default="lirik_plays", help="Provide folder name to hold YouTube API data as a string")
-        return parser.parse_args(["channel_id", "channel_folder_name"])
+class MainCliArgs(argparse.Namespace):
+    channel_id: str
+    channel_folder_name: str
+
+
+def attach_cli_args_to_main(
+    channel_id_default: str = "UCebh6Np0l-DT9LXHrXbmopg",
+    channel_folder_name_default: str = "lirik_plays"
+) -> MainCliArgs:
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument('--channel_id', type=str, default=channel_id_default, help="Provide YouTube Channel ID as a string")
+    parser.add_argument('--channel_folder_name', type=str, default=channel_folder_name_default, help="Provide folder name to hold YouTube API data as a string")
+    return parser.parse_args()

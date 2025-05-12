@@ -3,6 +3,7 @@ client_secret*.json
 key*.json
 .DS_Store
 gmm/
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
