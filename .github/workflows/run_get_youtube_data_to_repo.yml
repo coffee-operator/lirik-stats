@@ -49,6 +49,8 @@ jobs:
           git add --all
           git commit -m "Latest data: $GITHUB_OUTPUT" || exit 0
 
-      - name: pull & push
+      - name:
+        run: |
+          pull & push
           git pull
           git push
