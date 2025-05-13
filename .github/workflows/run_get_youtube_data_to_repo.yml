@@ -1,4 +1,5 @@
 name: run_get_youtube_data_to_repo
+run-name: 
 
 on:
   workflow_dispatch:
@@ -16,7 +17,6 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    run-name: ${{ steps.get-time.outputs.date }}
 
     steps:
       - uses: actions/checkout@v4
@@ -27,12 +27,6 @@ jobs:
       - name: install uv project dependencies
         run: |
           uv sync --locked --all-extras --dev
-
-      - name: get time
-        id: get-time
-        run: |
-          echo "date=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
-          echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M:%S')"
 
       - name: retrieve API credential
         run: |
@@ -47,7 +41,7 @@ jobs:
           git config --global user.email coffee-operator-github-action@gmail.com
           git config --global user.name coffee-operator-github-action
           git add --all
-          git commit -m "Latest data: $GITHUB_OUTPUT" || exit 0
+          git commit -m "updating latest data" || exit 0
 
       - name: pull & push
         run: |
