@@ -20,16 +20,16 @@ def main(
 
     # identify uploads playlist, get metadata for all videos uploaded to channel
     uploads_playlist_id = utils.parse_channel_uploads_playlist_id(response_channel)
-    # all_video_metadata = utils.paginate_all_channel_uploads(youtube_resource, uploads_playlist_id)
+    all_video_metadata = utils.paginate_all_channel_uploads(youtube_resource, uploads_playlist_id)
 
     # write raw channel & video data as json to code repo
     # channel
     file_path = f"../../../datasets/{channel_folder_name}/youtube_api/raw/channel/{datetime.now().strftime('%Y-%m-%d')}.json.gz"
     utils.write_object_to_json_gzip_file(response_channel, file_path)
 
-    # # video
-    # file_path = f"../../../datasets/{channel_folder_name}/youtube_api/raw/video/{datetime.now().strftime("%Y-%m-%d")}.json.gz"
-    # utils.write_object_to_json_gzip_file(all_video_metadata, file_path)
+    # video
+    file_path = f"../../../datasets/{channel_folder_name}/youtube_api/raw/video/{datetime.now().strftime("%Y-%m-%d")}.json.gz"
+    utils.write_object_to_json_gzip_file(all_video_metadata, file_path)
 
 
 if __name__ == "__main__":
