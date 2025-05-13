@@ -1,0 +1,21 @@
+name: Run get YouTube data to repo
+
+on:
+  workflow-dispatch:
+
+jobs:
+  run-get-youtube-data-to-repo:
+    name: python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: install uv project dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: execute
+        run: echo hello world
