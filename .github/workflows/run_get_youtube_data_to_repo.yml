@@ -38,6 +38,7 @@ jobs:
 
       - name: commit
         run: |
+          ls -R
           git config --global user.email coffee-operator-github-action@gmail.com
           git config --global user.name coffee-operator-github-action
           git add --all
