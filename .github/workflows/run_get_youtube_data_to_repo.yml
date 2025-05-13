@@ -1,5 +1,5 @@
 name: run_get_youtube_data_to_repo
-run-name: run_get_youtube_data_to_repo $(date -u)
+run-name: run_get_youtube_data_to_repo {$(date -u)}
 
 on:
   workflow_dispatch:
