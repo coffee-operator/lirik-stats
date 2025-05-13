@@ -1,7 +1,7 @@
 name: Run get YouTube data to repo
 
 on:
-  workflow-dispatch:
+  workflow_dispatch:
 
 jobs:
   run-get-youtube-data-to-repo:
