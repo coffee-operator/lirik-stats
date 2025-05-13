@@ -1,10 +1,14 @@
-name: Run get YouTube data to repo
+name: run_get_youtube_data_to_repo
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents:
+    write
+
 jobs:
-  run-get-youtube-data-to-repo:
+  build:
     name: python
     runs-on: ubuntu-latest
 
@@ -15,7 +19,21 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: install uv project dependencies
-        run: uv sync --locked --all-extras --dev
+        run: |
+          uv sync --locked --all-extras --dev
 
-      - name: execute
-        run: echo hello world
+      - name: retrieve API credential
+        run: |
+          cat ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > ./backend/pipelines/youtube_api/raw/key.json
+
+      - name: get data
+        run: |
+          uv run ./backend/pipelines/youtube_api/raw/get_youtube_data_to_repo.py --key_file_path key.json
+
+      - name: commit and push
+        run: |
+          git add -A
+          timestemp=$(date -u)
+          git commit -m "Latest data: ${timestemp}" || exit 0
+          git pull
+          git push
