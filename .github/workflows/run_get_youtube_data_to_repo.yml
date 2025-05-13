@@ -25,9 +25,11 @@ jobs:
       - name: retrieve API credential
         run: |
           cat ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > ./backend/pipelines/youtube_api/raw/key.json
+          head -2 ./backend/pipelines/youtube_api/raw/key2.json
 
       - name: get data
         run: |
+          tail -2 ./backend/pipelines/youtube_api/raw/key2.json
           uv run ./backend/pipelines/youtube_api/raw/get_youtube_data_to_repo.py --key_file_path ./backend/pipelines/youtube_api/raw/key.json
 
       - name: commit and push
