@@ -28,7 +28,7 @@ jobs:
 
       - name: retrieve API credential
         run: |
-          cat ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$TARGET_FILE_PATH/key.json"
+          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$TARGET_FILE_PATH/key.json"
 
       - name: get data
         run: |
