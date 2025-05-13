@@ -10,14 +10,14 @@ import argparse
 load_dotenv()
 
 
-def declare_youtube_api_config() -> dict:
+def declare_youtube_api_config(key_file_path: str = None) -> dict:
    return {
         "scopes": [
             "https://www.googleapis.com/auth/youtube.readonly"
         ],
         "api_service_name": "youtube",
         "api_version": "v3",
-        "key_file_path": "key_youtube-stats-459404-eefde03eff46.json"
+        "key_file_path": key_file_path
     }
 
 def create_service_account_credentials(api_config: dict) -> service_account.Credentials:
@@ -93,13 +93,16 @@ def write_object_to_json_gzip_file(object: Union[dict, List[dict]], file_path: s
 class MainCliArgs(argparse.Namespace):
     channel_id: str
     channel_folder_name: str
+    key_file_path: str
 
 
 def attach_cli_args_to_main(
-    channel_id_default: str = "UCebh6Np0l-DT9LXHrXbmopg",
-    channel_folder_name_default: str = "lirik_plays"
+    channel_id_default: str = None,
+    channel_folder_name_default: str = None,
+    key_file_path_default: str = None
 ) -> MainCliArgs:
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument('--channel_id', type=str, default=channel_id_default, help="Provide YouTube Channel ID as a string")
-    parser.add_argument('--channel_folder_name', type=str, default=channel_folder_name_default, help="Provide folder name to hold YouTube API data as a string")
+    parser.add_argument('--channel_id', type=str, default=channel_id_default, help="YouTube channel unique ID as a string")
+    parser.add_argument('--channel_folder_name', type=str, default=channel_folder_name_default, help="Folder name to hold YouTube API data as a string")
+    parser.add_argument('--key_file_path', type=str, default=key_file_path_default, help="Key file path name as a string")
     return parser.parse_args()
