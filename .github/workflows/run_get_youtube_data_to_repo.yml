@@ -24,7 +24,7 @@ jobs:
 
       - name: retrieve API credential
         run: |
-          cat ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > ./backend/pipelines/youtube_api/raw/key.json
+          cat ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -di > ./backend/pipelines/youtube_api/raw/key.json
 
       - name: get data
         run: |
