@@ -28,7 +28,7 @@ jobs:
 
       - name: get data
         run: |
-          uv run ./backend/pipelines/youtube_api/raw/get_youtube_data_to_repo.py --key_file_path key.json
+          uv run ./backend/pipelines/youtube_api/raw/get_youtube_data_to_repo.py --key_file_path ./backend/pipelines/youtube_api/raw/key.json
 
       - name: commit and push
         run: |
