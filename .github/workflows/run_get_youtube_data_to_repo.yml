@@ -19,7 +19,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: install uv
         uses: astral-sh/setup-uv@v5
@@ -35,10 +39,12 @@ jobs:
       - name: stage - get data
         run: |
           uv run "$TARGET_FILE_PATH/get_youtube_data_to_repo.py" --key_file_path "$TARGET_FILE_PATH/key.json"
+          GIT_STATUS=$(git status --porcelain)
+          echo $GIT_STATUS
+          ls -R
 
       - name: commit
         run: |
-          ls -R
           git config --global user.email coffee-operator-github-action@gmail.com
           git config --global user.name coffee-operator-github-action
           git add --all

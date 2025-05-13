@@ -1,6 +1,8 @@
 import utils
 from datetime import datetime
 import logging
+import os
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -24,12 +26,10 @@ def main(
 
     # write raw channel & video data as json to code repo
     # channel
-    file_path = f"../../../datasets/{channel_folder_name}/youtube_api/raw/channel/{datetime.now().strftime('%Y-%m-%d')}.json.gz"
-    utils.write_object_to_json_gzip_file(response_channel, file_path)
+    utils.write_object_to_json_gzip_file(response_channel, utils.create_abs_file_path(channel_folder_name, "channel"))
 
     # video
-    file_path = f"../../../datasets/{channel_folder_name}/youtube_api/raw/video/{datetime.now().strftime("%Y-%m-%d")}.json.gz"
-    utils.write_object_to_json_gzip_file(all_video_metadata, file_path)
+    utils.write_object_to_json_gzip_file(all_video_metadata, utils.create_abs_file_path(channel_folder_name, "video"))
 
 
 if __name__ == "__main__":
