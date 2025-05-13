@@ -1,10 +1,9 @@
-name: run_get_youtube_data_to_repo
-run-name: 
+name: pull_lirik_plays_youtube_api_daily
 
 on:
+  schedule:
+    - cron:  '0 18 * * *'
   workflow_dispatch:
-    branches:
-      - main
 
 permissions:
   contents:
@@ -38,10 +37,11 @@ jobs:
 
       - name: stage - get data
         run: |
-          uv run "$TARGET_FILE_PATH/get_youtube_data_to_repo.py" --key_file_path "$TARGET_FILE_PATH/key.json"
+          uv run "$TARGET_FILE_PATH/get_youtube_data_to_repo.py" \
+            --key_file_path "$TARGET_FILE_PATH/key.json"
+
           GIT_STATUS=$(git status --porcelain)
           echo $GIT_STATUS
-          ls -R
 
       - name: commit
         run: |
