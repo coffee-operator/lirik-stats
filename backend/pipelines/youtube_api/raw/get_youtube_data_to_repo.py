@@ -13,6 +13,7 @@ def main(
     channel_folder_name: str, 
     key_file_path: str
 ):
+    # initilize api assets
     api_config = utils.declare_youtube_api_config(key_file_path)
     credentials = utils.create_service_account_credentials(api_config)
     youtube_resource = utils.create_youtube_api_resource(api_config, credentials)
@@ -24,22 +25,18 @@ def main(
     uploads_playlist_id = utils.parse_channel_uploads_playlist_id(response_channel)
     all_video_metadata = utils.paginate_all_channel_uploads(youtube_resource, uploads_playlist_id)
 
-    # write raw channel & video data as json to code repo
-    # channel
+    # log workflow run
+    run_log = utils.create_workflow_run_log(channel_id, channel_folder_name)
+
+    # write raw data to code repo as json.gz: channel, video, log
     utils.write_object_to_json_gzip_file(response_channel, utils.create_abs_file_path(channel_folder_name, "channel"))
-
-    # video
     utils.write_object_to_json_gzip_file(all_video_metadata, utils.create_abs_file_path(channel_folder_name, "video"))
-
+    utils.write_object_to_json_gzip_file(run_log, utils.create_abs_file_path(channel_folder_name, "workflow"))
 
 if __name__ == "__main__":
     """Pull channel & video data from target YouTube Channel and store to indicated folder in repo"""
-    # set defaults for main(), change with CLI args
-    cli_args = utils.attach_cli_args_to_main(
-        channel_id_default="UCebh6Np0l-DT9LXHrXbmopg",
-        channel_folder_name_default="lirik_plays",
-        key_file_path_default="key_youtube-stats-459404-eefde03eff46.json",
-    )
+    # main() defaults to lirik_plays & local key, change with CLI args
+    cli_args = utils.attach_cli_args_to_main()
     main(
         channel_id=cli_args.channel_id,
         channel_folder_name=cli_args.channel_folder_name,

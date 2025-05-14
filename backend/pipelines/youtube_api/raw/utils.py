@@ -8,7 +8,8 @@ import gzip
 import argparse
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
+import uuid
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -84,11 +85,28 @@ def paginate_all_channel_uploads(
 
 
 def identify_project_root_dir() -> Path:
-    return Path(__file__).resolve().parent.parent.parent.parent
+    return Path(__file__).resolve().parent.parent.parent.parent.parent
+
+
+def get_current_datetime_utc_tz(format: str = '%Y-%m-%d'):
+    return datetime.now(timezone.utc).strftime(format)
+
+
+def create_workflow_run_log(
+    channel_id: str,
+    channel_folder_name: str,
+) -> dict:
+    return {
+        "id": str(uuid.uuid4()),
+        "channel_id": channel_id,
+        "channel_folder_name": channel_folder_name,
+        "run_date": get_current_datetime_utc_tz('%Y-%m-%d'),
+        "run_timestamp": get_current_datetime_utc_tz('%Y-%m-%d_%H-%M-%S_%z')
+    }
 
 
 def create_abs_file_path(channel_folder_name: str, data_source: str) -> str:
-    return f"{identify_project_root_dir()}/datasets/{channel_folder_name}/youtube_api/raw/{data_source}/{datetime.now().strftime('%Y-%m-%d')}.json.gz"
+    return f"{identify_project_root_dir()}/backend/datasets/{channel_folder_name}/youtube_api/raw/{data_source}/{get_current_datetime_utc_tz()}.json.gz"
     
 
 def create_file_path_if_doesnt_exist(file_path: str) -> None:
@@ -99,7 +117,7 @@ def write_object_to_json_gzip_file(
     object: Union[dict, List[dict]], 
     file_path: str
 ) -> None:
-    # create_file_path_if_doesnt_exist(file_path)
+    create_file_path_if_doesnt_exist(file_path)
     with gzip.open(file_path, "wt", encoding="utf-8") as f:
         json.dump(object, f, indent=4)
         logger.info(f"Object written to {file_path}")
@@ -112,9 +130,9 @@ class MainCliArgs(argparse.Namespace):
 
 
 def attach_cli_args_to_main(
-    channel_id_default: str,
-    channel_folder_name_default: str,
-    key_file_path_default: str,
+    channel_id_default:str = "UCebh6Np0l-DT9LXHrXbmopg",
+    channel_folder_name_default:str = "lirik_plays",
+    key_file_path_default:str = f"{identify_project_root_dir()}/backend/pipelines/youtube_api/raw/key_youtube-stats.json",
 ) -> MainCliArgs:
     parser = argparse.ArgumentParser(description="")
     parser.add_argument(
