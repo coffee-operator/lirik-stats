@@ -67,19 +67,17 @@ def paginate_all_channel_uploads(
             playlistId=uploads_playlist_id,
             pageToken=next_page_token,
         )
-        response_playlist_items = request.execute()
+        playlist_items = request.execute()
 
-        return response_playlist_items
+        return playlist_items
 
     video_metadata = []
-    response_playlist_items = get_uploads_playlist_items()
-    video_metadata.extend(response_playlist_items["items"])
+    playlist_items = get_uploads_playlist_items()
+    video_metadata.extend(playlist_items["items"])
 
-    while response_playlist_items.get("nextPageToken"):
-        response_playlist_items = get_uploads_playlist_items(
-            response_playlist_items.get("nextPageToken")
-        )
-        video_metadata.extend(response_playlist_items["items"])
+    while playlist_items.get("nextPageToken"):
+        playlist_items = get_uploads_playlist_items(playlist_items.get("nextPageToken"))
+        video_metadata.extend(playlist_items["items"])
 
     return video_metadata
 
