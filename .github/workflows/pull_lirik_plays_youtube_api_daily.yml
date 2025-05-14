@@ -2,7 +2,7 @@ name: pull_lirik_plays_youtube_api_daily
 
 on:
   schedule:
-    - cron:  '0 18 * * *'
+    - cron:  '0 16 * * *'
   workflow_dispatch:
 
 permissions:
