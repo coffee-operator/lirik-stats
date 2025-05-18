@@ -38,7 +38,9 @@ jobs:
       - name: stage - get data
         run: |
           uv run "$TARGET_FILE_PATH/get_youtube_data_to_repo.py" \
-            --key_file_path "$TARGET_FILE_PATH/key.json"
+            --key_file_path "$TARGET_FILE_PATH/key.json" \
+            --channel_id_default UCebh6Np0l-DT9LXHrXbmopg" \
+            --channel_folder_name lirik_plays"
 
           GIT_STATUS=$(git status --porcelain)
           echo $GIT_STATUS
