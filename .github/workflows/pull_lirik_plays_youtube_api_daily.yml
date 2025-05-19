@@ -10,7 +10,10 @@ permissions:
     write
 
 env:
-  TARGET_FILE_PATH: ./backend/pipelines/youtube_api/raw
+  WORKFLOW_FILE_PATH: ./backend/pipelines/youtube_api/raw
+  KEY_FILE_PATH: ./backend/pipelines/youtube_api/raw/key.json
+  CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
+  CHANNEL_FOLDER_NAME: lirik_plays
 
 jobs:
   build:
@@ -33,14 +36,14 @@ jobs:
 
       - name: retrieve API credential
         run: |
-          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$TARGET_FILE_PATH/key.json"
+          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$WORKFLOW_FILE_PATH/key.json"
 
       - name: stage - get data
         run: |
-          uv run "$TARGET_FILE_PATH/get_youtube_data_to_repo.py" \
-            --key_file_path "$TARGET_FILE_PATH/key.json" \
-            --channel_id UCebh6Np0l-DT9LXHrXbmopg \
-            --channel_folder_name lirik_plays
+          uv run "$WORKFLOW_FILE_PATH/get_youtube_data_to_repo.py" \
+            --key_file_path "$WORKFLOW_FILE_PATH/key.json" \
+            --channel_id $CHANNEL_ID \
+            --channel_folder_name $CHANNEL_FOLDER_NAME
 
           GIT_STATUS=$(git status --porcelain)
           echo $GIT_STATUS
