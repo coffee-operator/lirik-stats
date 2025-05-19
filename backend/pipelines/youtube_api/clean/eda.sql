@@ -1,4 +1,6 @@
 -- 
+
+
 CREATE OR REPLACE TABLE channel_history (
     id VARCHAR PRIMARY KEY,
     channel_id VARCHAR,
@@ -96,8 +98,12 @@ FROM
 WHERE
     is_current = True;
 
-.mode line
-SELECT * FROM channel;
+-- .mode line
+-- SELECT * FROM channel;
 
-.mode box
-DESCRIBE channel;
+-- .mode box
+-- DESCRIBE channel;
+
+EXPORT DATABASE 'backend/datasets/lirik_plays/youtube_api/clean/' (
+    FORMAT parquet
+);
