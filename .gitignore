@@ -3,7 +3,7 @@ client_secret*.json
 key*.json
 .DS_Store
 gmm/
-.DS_Store
+db.duckdb.wal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
