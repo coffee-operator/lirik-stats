@@ -25,7 +25,7 @@ def main(
     uploads_playlist_id = utils.parse_channel_uploads_playlist_id(response_channel)
     all_video_metadata = utils.paginate_all_channel_uploads(youtube_resource, uploads_playlist_id)
 
-    # log workflow run
+    # log workflow run - maintain history
     run_log = utils.create_workflow_run_log(channel_id, channel_folder_name)
 
     # write raw data to code repo as json.gz: channel, video, log
