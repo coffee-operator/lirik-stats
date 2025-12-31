@@ -5,6 +5,7 @@ from googleapiclient.discovery import Resource
 
 
 class YouTubeClient:
+    """Credentials and setup to call YouTube APIs."""
     def __init__(
         self,
         key_file_path: Path,
@@ -33,5 +34,3 @@ if __name__ == "__main__":
         api_service_name="youtube",
         api_version="v3"
     )
-
-    print(youtube_client)
