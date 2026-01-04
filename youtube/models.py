@@ -1,5 +1,11 @@
+import argparse
 from typing import Optional
 from pydantic import BaseModel, RootModel
+
+class MainCliArgs(argparse.Namespace):
+    key_file_path: str
+    channel_id: str
+    channel_folder_name: str
 
 
 class ChannelInfo(BaseModel):

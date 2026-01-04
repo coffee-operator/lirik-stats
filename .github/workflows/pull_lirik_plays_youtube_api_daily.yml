@@ -13,8 +13,7 @@ permissions:
     write
 
 env:
-  WORKFLOW_FILE_PATH: ./backend/pipelines/youtube_api/raw
-  KEY_FILE_PATH: ./backend/pipelines/youtube_api/raw/key.json
+  KEY_FILE_PATH: ./youtube/key.json
   CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
   CHANNEL_FOLDER_NAME: lirik_plays
 
@@ -39,12 +38,12 @@ jobs:
 
       - name: retrieve API credential
         run: |
-          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$WORKFLOW_FILE_PATH/key.json"
+          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$KEY_FILE_PATH"
 
       - name: stage - get data
         run: |
-          uv run "$WORKFLOW_FILE_PATH/get_youtube_data_to_repo.py" \
-            --key_file_path "$WORKFLOW_FILE_PATH/key.json" \
+          uv run "main.py" \
+            --key_file_path "$KEY_FILE_PATH" \
             --channel_id $CHANNEL_ID \
             --channel_folder_name $CHANNEL_FOLDER_NAME
 
