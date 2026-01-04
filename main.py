@@ -15,16 +15,7 @@ logging.basicConfig(
 def run(
     args: MainCliArgs, youtube_service: YouTubeService, storage_service: StorageService
 ):
-    """
-    Handle run of application logic
-    
-    :param args: CLI arguments for running the program
-    :type args: MainCliArgs
-    :param youtube_service: Coordinates YouTube API calls
-    :type youtube_service: YouTubeService
-    :param storage_service: Handles file IO
-    :type storage_service: StorageService
-    """
+    """Handle run of application logic."""
 
     # pull data & log
     channel_info = youtube_service.get_channel_info(channel_id=args.channel_id)
@@ -43,8 +34,9 @@ def run(
 
 
 def main():
-    # setup objects
+    # program setup
     args = parse_args()
+
     youtube_client = YouTubeClient(
         key_file_path=args.key_file_path,
         scopes=config.SCOPES,
@@ -52,7 +44,6 @@ def main():
         api_version=config.API_VERSION,
         cache_discovery=config.CACHE_DISCOVERY,
     )
-
     youtube_api = YouTubeAPI(youtube_client)
     youtube_service = YouTubeService(youtube_api)
     storage_service = StorageService(
