@@ -4,7 +4,7 @@ key*.json
 .DS_Store
 gmm/
 db.duckdb.wal
-.vscode/*
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -182,4 +182,4 @@ cython_debug/
 .pypirc
 
 # Experimental
-scratch/
+scratch

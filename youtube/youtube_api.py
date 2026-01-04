@@ -1,5 +1,6 @@
 from googleapiclient.discovery import Resource
-from youtube_client import YouTubeClient
+from youtube.models import ChannelInfo, PlaylistItemsResponse
+from youtube.youtube_client import YouTubeClient
 
 
 class YouTubeAPI:
@@ -16,11 +17,14 @@ class YouTubeAPI:
         self,
         channel_id: str,
         query_parts="snippet,contentDetails,statistics,topicDetails,status",
-    ) -> dict:
-        return self.resource.channels().list(part=query_parts, id=channel_id).execute()
+    ) -> ChannelInfo:
+        response = (
+            self.resource.channels().list(part=query_parts, id=channel_id).execute()
+        )
+        return ChannelInfo(**response)
 
-    def extract_channel_uploads_playlist_id(self, channel_info: dict) -> str:
-        return channel_info["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+    def extract_channel_uploads_playlist_id(self, channel_info: ChannelInfo) -> str:
+        return channel_info.items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
 
     def get_channel_playlist_items(
         self,
@@ -28,8 +32,8 @@ class YouTubeAPI:
         query_parts="snippet,contentDetails,status",
         max_results=50,
         next_page_token: str = None,
-    ) -> dict:
-        return (
+    ) -> PlaylistItemsResponse:
+        response = (
             self.resource.playlistItems()
             .list(
                 playlistId=playlist_id,
@@ -39,3 +43,4 @@ class YouTubeAPI:
             )
             .execute()
         )
+        return PlaylistItemsResponse(**response)
