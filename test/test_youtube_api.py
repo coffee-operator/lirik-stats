@@ -6,23 +6,11 @@ from pathlib import Path
 from pytest import fixture, mark
 
 
-@fixture
-def m_youtube_client() -> MagicMock:
-    return MagicMock()
-
-@fixture
-def youtube_api(m_youtube_client: YouTubeClient) -> YouTubeAPI:
-    return YouTubeAPI(youtube_client=m_youtube_client)
-
-def test_youtube_api_has_resource(
-    m_youtube_client: YouTubeClient,
-    youtube_api: YouTubeAPI,
-    api_service_name: str = "fake_value"
-):
+def test_youtube_api_init(api_service_name: str = "fake_value"):
     # Arrange
-    # m_youtube_client = MagicMock()
+    m_youtube_client = MagicMock()
     m_youtube_client.resource.api_service_name.return_value = api_service_name
-    # youtube_api = YouTubeAPI(youtube_client=m_youtube_client)
+    youtube_api = YouTubeAPI(youtube_client=m_youtube_client)
 
     # Act
     # YouTubeAPI__init__()
@@ -31,21 +19,17 @@ def test_youtube_api_has_resource(
     youtube_api.resource == api_service_name
 
 
-def test_youtube_api_get_channel_info(
-    m_youtube_client: YouTubeClient,
-    youtube_api: YouTubeAPI,
-    channel_id: str = "123123"
-):
+def test_youtube_api_get_channel_info(channel_id: str = "123123"):
     # Arrange
-    # m_youtube_client = MagicMock()
-    channel_info: ChannelInfo = {
+    m_youtube_client = MagicMock()
+    m_channel_info = {
         "kind": "k",
         "etag": "e",
         "pageInfo": {},
         "items": [{"id": channel_id}],
     }
-    m_youtube_client.resource.channels.return_value.list.return_value.execute.return_value = channel_info
-    # youtube_api = YouTubeAPI(youtube_client=m_youtube_client)
+    m_youtube_client.resource.channels.return_value.list.return_value.execute.return_value = m_channel_info
+    youtube_api = YouTubeAPI(youtube_client=m_youtube_client)
 
     # Act
     channel_info = youtube_api.get_channel_info(channel_id=channel_id)
@@ -53,6 +37,27 @@ def test_youtube_api_get_channel_info(
     # Assert
     assert isinstance(channel_info, ChannelInfo)
     assert channel_info.items[0]["id"] == channel_id
+
+
+def test_extract_channel_uploads_playlist_id(playlist_id: str = "123123"):
+    # Arrange
+    youtube_api = YouTubeAPI(youtube_client=MagicMock())
+    channel_info = ChannelInfo(
+        **{
+            "kind": "k",
+            "etag": "e",
+            "pageInfo": {},
+            "items": [
+                {"contentDetails": {"relatedPlaylists": {"uploads": playlist_id}}}
+            ],
+        }
+    )
+
+    # Act
+    m_playlist_id = youtube_api.extract_channel_uploads_playlist_id(channel_info)
+
+    # Assert
+    assert m_playlist_id == playlist_id
 
 
 def test_youtube_api_get_channel_playlist_items(playlist_id: str = "abcabc"):
