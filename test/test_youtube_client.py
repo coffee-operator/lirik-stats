@@ -52,7 +52,6 @@ def youtube_client(
     )
 
 
-# @mark.parameterize()
 def test_youtube_client_init(
     fake_key_file_path: Path, m_credentials: Credentials, m_discovery: discovery
 ):

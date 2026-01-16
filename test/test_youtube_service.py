@@ -38,4 +38,23 @@ def test_get_channel_info(channel_id: str = "abcabc"):
     assert channel_info.items[0]["id"] == channel_id
 
 
-# e
+def test_extract_channel_uploads_playlist_id(playlist_id: str = "123123"):
+    # Arrange
+    m_youtube_api = YouTubeAPI(youtube_client=MagicMock())
+    channel_info = ChannelInfo(
+        **{
+            "kind": "k",
+            "etag": "e",
+            "pageInfo": {},
+            "items": [
+                {"contentDetails": {"relatedPlaylists": {"uploads": playlist_id}}}
+            ],
+        }
+    )
+    youtube_service = YouTubeService(youtube_api=m_youtube_api)
+
+    # Act
+    m_playlist_id = youtube_service.extract_channel_uploads_playlist_id(channel_info=channel_info)
+
+    # Assert
+    assert m_playlist_id == playlist_id

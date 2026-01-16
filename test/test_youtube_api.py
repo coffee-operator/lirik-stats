@@ -1,9 +1,6 @@
 from unittest.mock import MagicMock
 from youtube.models import ChannelInfo, PlaylistItem
-from youtube.youtube_client import YouTubeClient
 from youtube.youtube_api import YouTubeAPI
-from pathlib import Path
-from pytest import fixture, mark
 
 
 def test_youtube_api_init(api_service_name: str = "fake_value"):
