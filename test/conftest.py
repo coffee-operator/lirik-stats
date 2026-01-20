@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 from google.oauth2.service_account import Credentials
 from googleapiclient import discovery
 from youtube.models import ChannelInfo, PlaylistItemsResponse
-from youtube.youtube_client import YouTubeClient
 from youtube.youtube_api import YouTubeAPI
 from youtube.youtube_service import YouTubeService
 

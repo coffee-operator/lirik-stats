@@ -1,6 +1,6 @@
 import gzip
 import json
-from typing import Literal
+from typing import Callable, Literal
 from datetime import datetime, timezone
 import uuid
 import logging
@@ -15,19 +15,27 @@ type data_sources = Literal["channel", "video", "workflow"]
 
 
 class StorageService:
-    def __init__(self, channel_id: str, channel_folder_name: str):
+    def __init__(
+        self,
+        channel_id: str,
+        channel_folder_name: str,
+        clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+        uuid_provider: Callable[[], uuid.UUID] = lambda: uuid.uuid4,
+    ):
         self.channel_id = channel_id
         self.channel_folder_name = channel_folder_name
+        self.clock = clock
+        self.uuid_provider = uuid_provider
         self.storage_base_path = (
             config.BASE_DATA_PATH / channel_folder_name / "youtube_api" / "raw"
         )
 
     def _get_now_timestamp(self, format: str = "%Y-%m-%d"):
-        return datetime.now(timezone.utc).strftime(format)
+        return self.clock().strftime(format)
 
     def create_run_log(self) -> WorkflowLog:
         return WorkflowLog(
-            id=str(uuid.uuid4()),
+            id=str(self.uuid_provider()),
             channel_id=self.channel_id,
             channel_folder_name=self.channel_folder_name,
             run_date=self._get_now_timestamp("%Y-%m-%d"),
