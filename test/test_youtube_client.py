@@ -2,7 +2,7 @@ from youtube.youtube_client import YouTubeClient
 from google.oauth2.service_account import Credentials
 from googleapiclient import discovery
 from pathlib import Path
-from conftest import FAKE_SCOPES, FAKE_API_SERVICE_NAME, FAKE_API_VERSION
+from test.conftest import FAKE_SCOPES, FAKE_API_SERVICE_NAME, FAKE_API_VERSION
 
 
 def test_youtube_client_init(

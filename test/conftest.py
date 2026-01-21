@@ -1,10 +1,12 @@
 from pathlib import Path
+from typing import Callable
 from pytest import fixture
 from unittest.mock import MagicMock
 from google.oauth2.service_account import Credentials
 from googleapiclient import discovery
 from youtube.models import ChannelInfo, PlaylistItemsResponse
 from youtube.youtube_api import YouTubeAPI
+from youtube.youtube_client import YouTubeClient
 from youtube.youtube_service import YouTubeService
 
 
@@ -41,17 +43,17 @@ def m_discovery(m_credentials: Credentials) -> discovery:
 
 
 @fixture
-def m_youtube_client():
+def m_youtube_client() -> YouTubeClient:
     return MagicMock()
 
 
 @fixture
-def m_youtube_api():
+def m_youtube_api() -> YouTubeAPI:
     return MagicMock()
 
 
 @fixture
-def f_youtube_service():
+def f_youtube_service() -> Callable[[MagicMock | YouTubeAPI], YouTubeService]:
     def _create(youtube_api: MagicMock | YouTubeAPI) -> YouTubeService:
         return YouTubeService(youtube_api=youtube_api)
 
@@ -59,7 +61,7 @@ def f_youtube_service():
 
 
 @fixture
-def f_channel_info():
+def f_channel_info() -> Callable[[str, str], ChannelInfo]:
     def _create(channel_id: str = "12345", playlist_id: str = "abc") -> ChannelInfo:
         return ChannelInfo(
             **{
@@ -76,7 +78,7 @@ def f_channel_info():
 
 
 @fixture
-def f_playlist_items_response():
+def f_playlist_items_response() -> Callable[[str, str], PlaylistItemsResponse]:
     def _create(
         next_page_token: str = "42", playlist_id: str = "alpha"
     ) -> PlaylistItemsResponse:
