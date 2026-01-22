@@ -21,13 +21,14 @@ class StorageService:
         channel_folder_name: str,
         clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
         uuid_provider: Callable[[], uuid.UUID] = lambda: uuid.uuid4,
+        base_data_path=config.BASE_DATA_PATH,
     ):
         self.channel_id = channel_id
         self.channel_folder_name = channel_folder_name
         self.clock = clock
         self.uuid_provider = uuid_provider
         self.storage_base_path = (
-            config.BASE_DATA_PATH / channel_folder_name / "youtube_api" / "raw"
+            base_data_path / channel_folder_name / "youtube_api" / "raw"
         )
 
     def _get_now_timestamp(self, format: str = "%Y-%m-%d"):
