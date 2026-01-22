@@ -46,51 +46,65 @@ def test_extract_channel_uploads_playlist_id(
     assert m_playlist_id == playlist_id
 
 
-def test_extend_playlist_items(
+def test_fetch_next_playlist_items(
     m_youtube_api,
     f_youtube_service,
     f_playlist_items_response,
-    playlist_id: str = "123123",
-    next_page_token: str = "def",
+    playlist_id: str = "432432",
+    next_page_token: str = "hij",
 ):
     # Arrange
     youtube_service = f_youtube_service(youtube_api=m_youtube_api)
-
-    m_all_playlist_items = PlaylistItems([])
-    m_playlist_items_response = f_playlist_items_response(
+    m_playlist_item_response = f_playlist_items_response(
         playlist_id=playlist_id, next_page_token=next_page_token
     )
-    m_youtube_api.get_channel_playlist_items.return_value = m_playlist_items_response
+    m_youtube_api.get_channel_playlist_items.return_value = m_playlist_item_response
 
     # Act
-    m_next_page_token = youtube_service.extend_playlist_items(
-        all_playlist_items=m_all_playlist_items,
-        playlist_id=playlist_id,
-        next_page_token=None,
+    playlist_items, m_next_page_token = youtube_service.fetch_next_playlist_items(
+        playlist_id=playlist_id, next_page_token=next_page_token
     )
 
     # Assert
     assert m_next_page_token == next_page_token
-    assert m_all_playlist_items == PlaylistItems(m_playlist_items_response.items)
+    assert m_playlist_item_response.items == playlist_items
+
+
+def test_yield_all_playlist_items(
+    m_youtube_api,
+    f_youtube_service,
+    f_playlist_items_response,
+    playlist_id: str = "123",
+):
+    # Arrange
+    youtube_service = f_youtube_service(youtube_api=m_youtube_api)
+    page_1 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="1")
+    page_2 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="2")
+    page_3 = f_playlist_items_response(playlist_id=playlist_id, next_page_token=None)
+    m_youtube_api.get_channel_playlist_items.side_effect = [page_1, page_2, page_3]
+
+    # Act
+    m_all_items = list(
+        youtube_service.yield_all_playlist_items(playlist_id=playlist_id)
+    )
+
+    # Assert
+    assert m_youtube_api.get_channel_playlist_items.call_count == 3
+    assert m_all_items == (page_1.items + page_2.items + page_3.items)
 
 
 def test_paginate_all_playlist_items(
     m_youtube_api,
     f_youtube_service,
     f_playlist_items_response,
-    playlist_id: str = "234234",
-    next_page_token: str = "ghi",
+    playlist_id: str = "456"
 ):
     # Arrange
     youtube_service = f_youtube_service(youtube_api=m_youtube_api)
-
-    page_1 = f_playlist_items_response(
-        playlist_id=playlist_id, next_page_token=next_page_token
-    )
-
-    page_2 = f_playlist_items_response(playlist_id=playlist_id, next_page_token=None)
-
-    m_youtube_api.get_channel_playlist_items.side_effect = [page_1, page_2]
+    page_1 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="1")
+    page_2 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="2")
+    page_3 = f_playlist_items_response(playlist_id=playlist_id, next_page_token=None)
+    m_youtube_api.get_channel_playlist_items.side_effect = [page_1, page_2, page_3]
 
     # Act
     m_all_playlist_items = youtube_service.paginate_all_playlist_items(
@@ -98,8 +112,5 @@ def test_paginate_all_playlist_items(
     )
 
     # Assert
-    assert m_youtube_api.get_channel_playlist_items.call_count == 2
-    m_youtube_api.get_channel_playlist_items.assert_called_with(
-        playlist_id=playlist_id, next_page_token=next_page_token
-    )
-    assert m_all_playlist_items == PlaylistItems(page_1.items + page_2.items)
+    assert m_youtube_api.get_channel_playlist_items.call_count == 3
+    assert m_all_playlist_items == PlaylistItems(page_1.items + page_2.items + page_3.items)
