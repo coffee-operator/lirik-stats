@@ -37,8 +37,24 @@ def m_base_data_path(tmp_path) -> Path:
 
 
 @fixture
+def m_api_source() -> api_sources:
+    return "youtube_api"
+
+
+@fixture
+def m_data_stage() -> data_stages: 
+    return "raw"
+
+
+@fixture
+def m_data_source() -> data_sources:
+    return "workflow"
+
+
+@fixture
 def m_json_gz_file_name(m_clock, format="%Y-%m-%d") -> str:
     return f"{m_clock.strftime(format)}.json.gz"
+
 
 @fixture
 def m_storage_service(
@@ -112,28 +128,48 @@ def test_create_target_file_path(
     m_base_data_path,
     m_channel_folder_name,
     m_json_gz_file_name,
-    api_source: api_sources = "youtube_api",
-    data_stage: data_stages = "raw",
-    data_source: data_sources = "sync",
+    m_api_source,
+    m_data_stage,
+    m_data_source,
 ):
     # Arrange
     # fixture
 
     # Act
     file_path = m_storage_service._create_target_file_path(
-        api_source=api_source,
-        data_stage=data_stage,
-        data_source=data_source
+        api_source=m_api_source, data_stage=m_data_stage, data_source=m_data_source
     )
 
     m_file_path = (
         m_base_data_path
         / m_channel_folder_name
-        / api_source
-        / data_stage
-        / data_source
+        / m_api_source
+        / m_data_stage
+        / m_data_source
         / m_json_gz_file_name
     )
 
     # Assert
+    assert file_path == m_file_path
+
+
+def test_save_json_to_gz(
+    m_storage_service,
+    m_api_source,
+    m_data_stage,
+    m_data_source,
+):
+    # Arrange
+    workflow_log = m_storage_service.create_run_log()
+
+    # Act
+    file_path = m_storage_service.save_json_to_gz(workflow_log, data_source="workflow")
+    m_file_path = m_storage_service._create_target_file_path(
+        api_source=m_api_source,
+        data_stage=m_data_stage,
+        data_source=m_data_source
+    )
+
+    # Assert
+    assert file_path.exists()
     assert file_path == m_file_path

@@ -3,7 +3,7 @@ from youtube import config
 from youtube.models import MainCliArgs
 
 
-def parse_args() -> MainCliArgs:
+def parse_cli_args(cli_args: list[str] = None) -> MainCliArgs:
     parser = argparse.ArgumentParser(
         description="Pipeline to reterieve Youtube API data"
     )
@@ -26,4 +26,4 @@ def parse_args() -> MainCliArgs:
         help="Snakecase, human-readable name of the target YouTube account",
     )
 
-    return parser.parse_args()
+    return parser.parse_args(cli_args)

@@ -37,7 +37,7 @@ class StorageService:
 
     def create_run_log(self) -> WorkflowLog:
         return WorkflowLog(
-            id=str(self.uuid_provider),
+            id=str(self.uuid_provider()),
             channel_id=self.channel_id,
             channel_folder_name=self.channel_folder_name,
             run_date=self._get_now_timestamp("%Y-%m-%d"),
@@ -65,7 +65,7 @@ class StorageService:
         data_source: data_sources,
         api_source: api_sources = "youtube_api",
         data_stage: data_stages = "raw",
-    ):
+    ) -> Path:
         file_path = self._create_target_file_path(
             api_source=api_source, data_stage=data_stage, data_source=data_source
         )
@@ -74,3 +74,5 @@ class StorageService:
         with gzip.open(file_path, "wt", encoding="utf-8") as f:
             json.dump(data.model_dump(), f, indent=4)
         logger.info(f"Object {data.__class__} written to {file_path}")
+
+        return file_path

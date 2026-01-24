@@ -1,5 +1,6 @@
+import sys
 from youtube import config
-from youtube.cli import parse_args
+from youtube.cli import parse_cli_args
 from youtube.models import MainCliArgs
 from youtube.youtube_client import YouTubeClient
 from youtube.youtube_api import YouTubeAPI
@@ -33,9 +34,9 @@ def run(
     storage_service.save_json_to_gz(data=workflow_log, data_source="workflow")
 
 
-def main():
+def main(cli_args: list[str]):
     # program setup
-    args = parse_args()
+    args = parse_cli_args(cli_args=cli_args)
 
     youtube_client = YouTubeClient(
         key_file_path=args.key_file_path,
@@ -54,4 +55,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(cli_args=sys.argv[1:])
