@@ -68,11 +68,11 @@ def test_run(
 @patch("main.StorageService")
 @patch("main.run")
 def test_main_setup(
-    p_run,
-    p_storage_service,
-    p_youtube_service,
-    p_youtube_api,
-    p_youtube_client,
+    mock_run,
+    mock_storage_service,
+    mock_youtube_service,
+    mock_youtube_api,
+    mock_youtube_client,
     key_file_path: str = str(config.DEFAULT_KEY_FILE_PATH),
     channel_id: str = "123123",
     channel_folder_name: str = "lirik_wins",
@@ -100,21 +100,21 @@ def test_main_setup(
     assert args.channel_id == channel_id
     assert args.channel_folder_name == channel_folder_name
 
-    p_youtube_client.assert_called_once_with(
+    mock_youtube_client.assert_called_once_with(
         key_file_path=key_file_path,
         scopes=config.SCOPES,
         api_service_name=config.API_SERVICE_NAME,
         api_version=config.API_VERSION,
         cache_discovery=config.CACHE_DISCOVERY,
     )
-    p_youtube_api.assert_called_once_with(p_youtube_client.return_value)
-    p_youtube_service.assert_called_once_with(p_youtube_api.return_value)
-    p_storage_service.assert_called_once_with(
+    mock_youtube_api.assert_called_once_with(mock_youtube_client.return_value)
+    mock_youtube_service.assert_called_once_with(mock_youtube_api.return_value)
+    mock_storage_service.assert_called_once_with(
         channel_id=channel_id, channel_folder_name=channel_folder_name
     )
 
-    p_run.assert_called_once_with(
+    mock_run.assert_called_once_with(
         args=args,
-        youtube_service=p_youtube_service.return_value,
-        storage_service=p_storage_service.return_value,
+        youtube_service=mock_youtube_service.return_value,
+        storage_service=mock_storage_service.return_value,
     )
