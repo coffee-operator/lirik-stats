@@ -6,7 +6,7 @@ from test.conftest import FAKE_SCOPES, FAKE_API_SERVICE_NAME, FAKE_API_VERSION
 
 
 def test_youtube_client_init(
-    fake_key_file_path: Path, m_credentials: Credentials, m_discovery: discovery
+    fake_key_file_path: Path, mock_credentials: Credentials, mock_discovery: discovery
 ):
     # Arrange
     youtube_client = YouTubeClient(
@@ -14,16 +14,16 @@ def test_youtube_client_init(
         scopes=FAKE_SCOPES,
         api_service_name=FAKE_API_SERVICE_NAME,
         api_version=FAKE_API_VERSION,
-        credentials=m_credentials,
-        discovery=m_discovery,
+        credentials=mock_credentials,
+        discovery=mock_discovery,
     )
 
     # Act
     # YouTubeClient.__init__()
 
     # Assert
-    m_credentials.from_service_account_file.assert_called_once()
-    m_discovery.build.assert_called_once()
+    mock_credentials.from_service_account_file.assert_called_once()
+    mock_discovery.build.assert_called_once()
 
     assert youtube_client.credentials.scopes == FAKE_SCOPES
     assert youtube_client.resource.api_service_name == FAKE_API_SERVICE_NAME
