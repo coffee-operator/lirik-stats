@@ -6,11 +6,11 @@ from main import main, run
 
 
 def test_run(
-    f_youtube_service,
-    m_youtube_api,
-    f_channel_info,
-    f_playlist_items_response,
-    m_storage_service,
+    factory_youtube_service,
+    mock_youtube_api,
+    factory_channel_info,
+    factory_playlist_items_response,
+    storage_service,
     playlist_id: str = "123123123",
 ):
     # Arrange
@@ -22,31 +22,37 @@ def test_run(
     )
 
     ## YouTubeService
-    youtube_service = f_youtube_service(youtube_api=m_youtube_api)
+    youtube_service = factory_youtube_service(youtube_api=mock_youtube_api)
 
     ### Mock YouTubeService internal calls
-    m_youtube_api.get_channel_info.return_value = f_channel_info(
+    mock_youtube_api.get_channel_info.return_value = factory_channel_info(
         channel_id=args.channel_id, playlist_id=playlist_id
     )
 
-    page_1 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="1")
-    page_2 = f_playlist_items_response(playlist_id=playlist_id, next_page_token="2")
-    page_3 = f_playlist_items_response(playlist_id=playlist_id, next_page_token=None)
-    m_youtube_api.get_channel_playlist_items.side_effect = [page_1, page_2, page_3]
+    page_1 = factory_playlist_items_response(
+        playlist_id=playlist_id, next_page_token="1"
+    )
+    page_2 = factory_playlist_items_response(
+        playlist_id=playlist_id, next_page_token="2"
+    )
+    page_3 = factory_playlist_items_response(
+        playlist_id=playlist_id, next_page_token=None
+    )
+    mock_youtube_api.get_channel_playlist_items.side_effect = [page_1, page_2, page_3]
 
     ## StorageService
     # fixture
 
     # Act
-    run(args=args, youtube_service=youtube_service, storage_service=m_storage_service)
+    run(args=args, youtube_service=youtube_service, storage_service=storage_service)
 
-    m_channel_file_path = m_storage_service._create_target_file_path(
+    m_channel_file_path = storage_service._create_target_file_path(
         api_source="youtube_api", data_stage="raw", data_source="channel"
     )
-    m_video_file_path = m_storage_service._create_target_file_path(
+    m_video_file_path = storage_service._create_target_file_path(
         api_source="youtube_api", data_stage="raw", data_source="video"
     )
-    m_workflow_file_path = m_storage_service._create_target_file_path(
+    m_workflow_file_path = storage_service._create_target_file_path(
         api_source="youtube_api", data_stage="raw", data_source="workflow"
     )
 
