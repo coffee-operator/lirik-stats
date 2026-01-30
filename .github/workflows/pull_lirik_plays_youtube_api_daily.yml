@@ -16,6 +16,7 @@ env:
   KEY_FILE_PATH: ./youtube/key.json
   CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
   CHANNEL_FOLDER_NAME: lirik_plays
+  SSH_KEY_SIGN_PATH: ./key_sign
 
 jobs:
   build:
@@ -32,10 +33,10 @@ jobs:
 
       - name: Setup SSH signing
         run: |
-          echo "${{ secrets.SSH_SIGNING_KEY }}" > ~/.ssh/id_signing
-          chmod 600 ~/.ssh/id_signing
+          echo "${{ secrets.SSH_SIGNING_KEY }}" > "$SSH_KEY_SIGN_PATH"
+          chmod 600 "$SSH_KEY_SIGN_PATH"
           git config --global gpg.format ssh
-          git config --global user.signingkey ~/.ssh/id_signing
+          git config --global user.signingkey "$SSH_KEY_SIGN_PATH"
           git config --global commit.gpgsign true
 
       - name: install uv
