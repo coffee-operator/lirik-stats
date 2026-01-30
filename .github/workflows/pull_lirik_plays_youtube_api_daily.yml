@@ -30,6 +30,14 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: Setup SSH signing
+        run: |
+          echo "${{ secrets.SSH_SIGNING_KEY }}" > ~/.ssh/id_signing
+          chmod 600 ~/.ssh/id_signing
+          git config --global gpg.format ssh
+          git config --global user.signingkey ~/.ssh/id_signing
+          git config --global commit.gpgsign true
+
       - name: install uv
         uses: astral-sh/setup-uv@v5
 
@@ -53,8 +61,6 @@ jobs:
 
       - name: commit
         run: |
-          git config --global user.email coffee-operator-github-action@gmail.com
-          git config --global user.name coffee-operator-github-action
           git add --all
           git commit -m "updating latest data" || exit 0
 
