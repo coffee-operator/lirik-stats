@@ -31,14 +31,6 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Setup SSH signing
-        run: |
-          echo "${{ secrets.SSH_SIGNING_KEY }}" > "$SSH_KEY_SIGN_PATH"
-          chmod 600 "$SSH_KEY_SIGN_PATH"
-          git config --global gpg.format ssh
-          git config --global user.signingkey "$SSH_KEY_SIGN_PATH"
-          git config --global commit.gpgsign true
-
       - name: install uv
         uses: astral-sh/setup-uv@v5
 
@@ -59,6 +51,16 @@ jobs:
 
           GIT_STATUS=$(git status --porcelain)
           echo $GIT_STATUS
+
+      - name: setup git ssh key sign
+        run: |
+          echo "${{ secrets.SSH_SIGNING_KEY }}" > "$SSH_KEY_SIGN_PATH"
+          chmod 600 "$SSH_KEY_SIGN_PATH"
+          git config --global gpg.format ssh
+          git config --global user.signingkey "$SSH_KEY_SIGN_PATH"
+          git config --global commit.gpgsign true
+          git config --global user.email jjlx789@gmail.com
+          git config --global user.name coffee-operator
 
       - name: commit
         run: |
