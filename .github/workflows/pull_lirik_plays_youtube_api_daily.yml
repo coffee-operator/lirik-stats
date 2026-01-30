@@ -16,7 +16,7 @@ env:
   KEY_FILE_PATH: ./youtube/key.json
   CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
   CHANNEL_FOLDER_NAME: lirik_plays
-  SSH_KEY_SIGN_PATH: ./key_sign
+  GIT_SSH_SIGN_KEY_PATH: ./ssh_sign_key
 
 jobs:
   build:
@@ -54,10 +54,10 @@ jobs:
 
       - name: setup git ssh key sign
         run: |
-          echo "${{ secrets.SSH_SIGNING_KEY }}" > "$SSH_KEY_SIGN_PATH"
-          chmod 600 "$SSH_KEY_SIGN_PATH"
+          echo "${{ secrets.GIT_SSH_SIGN_KEY }}" > "$GIT_SSH_SIGN_KEY_PATH"
+          chmod 600 "$GIT_SSH_SIGN_KEY_PATH"
           git config --global gpg.format ssh
-          git config --global user.signingkey "$SSH_KEY_SIGN_PATH"
+          git config --global user.signingkey "$GIT_SSH_SIGN_KEY_PATH"
           git config --global commit.gpgsign true
           git config --global user.email jjlx789@gmail.com
           git config --global user.name coffee-operator
