@@ -183,3 +183,6 @@ cython_debug/
 
 # Experimental
 scratch
+
+# ci/cd
+*ssh_sign_key*
