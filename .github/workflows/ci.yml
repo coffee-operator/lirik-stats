@@ -1,0 +1,31 @@
+name: ci
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: install uv
+          uses: astral-sh/setup-uv@v5
+
+        - name: install uv project dependencies
+          run: |
+            uv sync --locked --all-extras --dev
+
+        - name: run test suite
+          run: |
+            uv run pytest --cov=youtube/ test/ --cov-report=term-missing:skip-covered --junitxml=pytest.xml | tee pytest-coverage.txt
+
+        - name: pytest coverage comment
+          uses: MishaKav/pytest-coverage-comment@main
+          with:
+              pytest-coverage-path: ./pytest-coverage.txt
+              junitxml-path: ./pytest.xml
