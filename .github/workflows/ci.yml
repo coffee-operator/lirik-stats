@@ -1,0 +1,17 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: install uv
+          uses: astral-sh/setup-uv@v5
+
+        - name: install uv project dependencies
+          run: |
+            uv sync --locked --all-extras --dev
