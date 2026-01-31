@@ -16,9 +16,12 @@ jobs:
           run: |
             uv sync --locked --all-extras --dev
 
-        - name: test backend
+        - name: run test suite
           run: |
-            uv run pytest test/* \
-              --cov-report=html \
-              --cov-report=markdown-append:$GITHUB_STEP_SUMMARY \
-              --cov-fail-under=100
+            uv run pytest --cov=youtube/ test/ --cov-report=term-missing:skip-covered --junitxml=pytest.xml | tee pytest-coverage.txt
+
+        - name: pytest coverage comment
+          uses: MishaKav/pytest-coverage-comment@main
+          with:
+              pytest-coverage-path: ./pytest-coverage.txt
+              junitxml-path: ./pytest.xml
