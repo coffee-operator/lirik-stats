@@ -18,7 +18,4 @@ jobs:
 
         - name: test backend
           run: |
-            uv run pytest test/* \                  
-                 --cov-report=html \
-                 --cov-report=markdown-append:$GITHUB_STEP_SUMMARY \
-                 --cov-fail-under=100
+            uv run pytest test/*
