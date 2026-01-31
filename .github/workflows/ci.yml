@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on: [push, pull_request]
 
@@ -15,3 +15,10 @@ jobs:
         - name: install uv project dependencies
           run: |
             uv sync --locked --all-extras --dev
+
+        - name: test backend
+          run: |
+            uv run pytest test/* \                  
+                 --cov-report=html \
+                 --cov-report=markdown-append:$GITHUB_STEP_SUMMARY \
+                 --cov-fail-under=100
