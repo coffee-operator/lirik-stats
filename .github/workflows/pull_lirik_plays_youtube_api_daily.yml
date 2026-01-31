@@ -13,7 +13,6 @@ env:
   KEY_FILE_PATH: ./youtube/key.json
   CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
   CHANNEL_FOLDER_NAME: lirik_plays
-  GIT_SSH_SIGN_KEY_PATH: ./ssh_sign_key
 
 jobs:
   build:
@@ -55,12 +54,10 @@ jobs:
           git config --global user.email jjlx789@gmail.com
           git config --global user.name coffee-operator
 
-      - name: commit
+      - name: commit, pull & push
         run: |
           git add --all
           git commit -m "updating latest data" || exit 0
-
-      - name: pull & push
-        run: |
           git pull
           git push
+
