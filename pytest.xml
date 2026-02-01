@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="19" time="0.126" timestamp="2026-01-31T18:46:14.942277-07:00" hostname="Jareds-MacBook-Pro.local"><testcase classname="test.test_cli" name="test_parse_cli_args" time="0.002" /><testcase classname="test.test_main" name="test_run" time="0.009" /><testcase classname="test.test_main" name="test_main_setup" time="0.003" /><testcase classname="test.test_storage_service" name="test_storage_service_init" time="0.001" /><testcase classname="test.test_storage_service" name="test_get_now_timestamp" time="0.001" /><testcase classname="test.test_storage_service" name="test_create_run_log" time="0.001" /><testcase classname="test.test_storage_service" name="test_create_target_file_path" time="0.001" /><testcase classname="test.test_storage_service" name="test_save_json_to_gz" time="0.002" /><testcase classname="test.test_youtube_api" name="test_youtube_api_init" time="0.001"><failure message="AssertionError: assert &lt;MagicMock id='4500266960'&gt; != &lt;MagicMock id='4500266960'&gt;&#10; +  where &lt;MagicMock id='4500266960'&gt; = &lt;youtube.youtube_api.YouTubeAPI object at 0x10c3c96a0&gt;.youtube_client">mock_youtube_client = &lt;MagicMock id='4500266960'&gt;
+api_service_name = 'fake_value'
+
+    def test_youtube_api_init(mock_youtube_client, api_service_name: str = "fake_value"):
+        # Arrange
+        mock_youtube_client.resource.api_service_name.return_value = api_service_name
+        youtube_api = YouTubeAPI(youtube_client=mock_youtube_client)
+    
+        # Act
+        # YouTubeAPI__init__()
+    
+        # Assert
+&gt;       assert youtube_api.youtube_client != mock_youtube_client
+E       AssertionError: assert &lt;MagicMock id='4500266960'&gt; != &lt;MagicMock id='4500266960'&gt;
+E        +  where &lt;MagicMock id='4500266960'&gt; = &lt;youtube.youtube_api.YouTubeAPI object at 0x10c3c96a0&gt;.youtube_client
+
+test/test_youtube_api.py:14: AssertionError</failure></testcase><testcase classname="test.test_youtube_api" name="test_youtube_api_get_channel_info" time="0.001" /><testcase classname="test.test_youtube_api" name="test_extract_channel_uploads_playlist_id" time="0.001" /><testcase classname="test.test_youtube_api" name="test_youtube_api_get_channel_playlist_items" time="0.001" /><testcase classname="test.test_youtube_client" name="test_youtube_client_init" time="0.002" /><testcase classname="test.test_youtube_service" name="test_youtube_service_init" time="0.001" /><testcase classname="test.test_youtube_service" name="test_get_channel_info" time="0.001" /><testcase classname="test.test_youtube_service" name="test_extract_channel_uploads_playlist_id" time="0.001" /><testcase classname="test.test_youtube_service" name="test_fetch_next_playlist_items" time="0.001" /><testcase classname="test.test_youtube_service" name="test_yield_all_playlist_items" time="0.001" /><testcase classname="test.test_youtube_service" name="test_paginate_all_playlist_items" time="0.001" /></testsuite></testsuites>
