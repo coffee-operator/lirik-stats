@@ -6,12 +6,13 @@ permissions:
   contents: write
   pull-requests: write
 
-concurrency:
-  group: $ {{ github.head_ref }}
-  cancel-in-progress: true
-
 jobs:
   test:
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispath' ||
+      (github.event_name == 'push' && github.ref_name == 'main')
+
     runs-on: ubuntu-latest
     steps:
         - name: Checkout Repository
