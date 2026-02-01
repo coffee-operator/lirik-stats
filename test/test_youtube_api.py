@@ -11,7 +11,7 @@ def test_youtube_api_init(mock_youtube_client, api_service_name: str = "fake_val
     # YouTubeAPI__init__()
 
     # Assert
-    assert youtube_api.youtube_client != mock_youtube_client
+    assert youtube_api.youtube_client == mock_youtube_client
     assert youtube_api.resource == mock_youtube_client.resource
 
 
