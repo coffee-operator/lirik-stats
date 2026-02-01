@@ -34,7 +34,7 @@ jobs:
           uv run pytest -v \
             --cov=. test/ \
             --cov-fail-under=100 \
-            --cov-report=xml:coverage.xml \
+            --cov-report=xml \
             --junitxml=pytest.xml
 
       - name: pytest coverage comment
