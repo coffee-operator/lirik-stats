@@ -41,6 +41,6 @@ jobs:
         if: always()
         uses: MishaKav/pytest-coverage-comment@main
         with:
-          pytest-coverage-path: ./coverage.xml
-          junitxml-path: ./pytest.xml
+          pytest-coverage-path: coverage.xml
+          junitxml-path: pytest.xml
           create-new-comment: true
