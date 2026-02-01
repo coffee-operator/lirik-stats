@@ -10,7 +10,7 @@ jobs:
   test:
     if: |
       github.event_name == 'pull_request' ||
-      github.event_name == 'workflow_dispath' ||
+      github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' && github.ref_name == 'main')
 
     runs-on: ubuntu-latest
