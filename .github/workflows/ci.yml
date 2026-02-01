@@ -34,12 +34,12 @@ jobs:
           uv run pytest -v \
             --cov=. test/ \
             --cov-fail-under=100 \
-            --cov-report=xml \
+            --cov-report=xml > coverage.txt \
             --junitxml=pytest.xml
 
       - name: pytest coverage comment
         if: always()
         uses: MishaKav/pytest-coverage-comment@main
         with:
-          pytest-coverage-path: coverage.xml
+          pytest-coverage-path: ./coverage.tx
           junitxml-path: pytest.xml
