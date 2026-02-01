@@ -2,8 +2,12 @@ name: ci
 
 on:
   push:
-  pull_request: 
+  pull_request:
   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull Request number"
+        required: true
 
 permissions:
   contents: write
@@ -44,3 +48,4 @@ jobs:
           pytest-coverage-path: ./coverage.xml
           junitxml-path: ./pytest.xml
           create-new-comment: true
+          issue-number: ${{ github.event.inputs.pr_number }}
