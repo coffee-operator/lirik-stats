@@ -28,7 +28,7 @@ jobs:
       - name: run test suite
         run: |
           set -o pipefail
-          uv run pytest -v \
+          uv run pytest -v --tb=long \
             --cov=. test/ \
             --cov-fail-under=100 \
             --junitxml=pytest.xml \
