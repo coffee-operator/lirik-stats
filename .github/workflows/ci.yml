@@ -6,9 +6,12 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: $ {{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    if: github.event_name == 'push' || github.event.pull_request.head.sha == github.sha
     runs-on: ubuntu-latest
     steps:
         - name: Checkout Repository
