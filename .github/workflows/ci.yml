@@ -28,7 +28,7 @@ jobs:
       - name: run test suite
         run: |
           set -o pipefail
-          uv run pytest -v --tb=long \
+          uv run pytest -v \
             --cov=. test/ \
             --cov-fail-under=100 \
             --cov-report=xml:coverage.xml \
@@ -40,3 +40,4 @@ jobs:
         with:
           pytest-coverage-path: ./coverage.xml
           junitxml-path: ./pytest.xml
+          create-new-comment: true
