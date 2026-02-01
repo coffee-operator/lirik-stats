@@ -8,24 +8,35 @@ permissions:
 
 jobs:
   test:
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispath' ||
+      (github.event_name == 'push' && github.ref_name == 'main')
+
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-        - name: install uv
-          uses: astral-sh/setup-uv@v5
+      - name: install uv
+        uses: astral-sh/setup-uv@v5
 
-        - name: install uv project dependencies
-          run: |
-            uv sync --locked --all-extras --dev
+      - name: install uv project dependencies
+        run: |
+          uv sync --locked --all-extras --dev
 
-        - name: run test suite
-          run: |
-            uv run pytest --cov=youtube/ test/ --cov-report=term-missing:skip-covered --junitxml=pytest.xml | tee pytest-coverage.txt
+      - name: run test suite
+        run: |
+          set -o pipefail
+          uv run pytest -v \
+            --cov=. test/ \
+            --cov-fail-under=100 \
+            --junitxml=pytest.xml \
+            | tee pytest-coverage.txt
 
-        - name: pytest coverage comment
-          uses: MishaKav/pytest-coverage-comment@main
-          with:
-              pytest-coverage-path: ./pytest-coverage.txt
-              junitxml-path: ./pytest.xml
+      - name: pytest coverage comment
+        if: always()
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
