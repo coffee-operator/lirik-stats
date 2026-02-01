@@ -2,12 +2,11 @@ name: pull_lirik_plays_youtube_api_daily
 
 on:
   schedule:
-    - cron:  '0 16 * * *'
+    - cron: "0 16 * * *"
   workflow_dispatch:
 
 permissions:
-  contents:
-    write
+  contents: write
 
 env:
   KEY_FILE_PATH: ./youtube/key.json
@@ -64,5 +63,3 @@ jobs:
           git commit -m "updating latest data" || exit 0
           git pull
           git push
-
-

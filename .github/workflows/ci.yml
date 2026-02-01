@@ -15,28 +15,28 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-        - name: install uv
-          uses: astral-sh/setup-uv@v5
+      - name: install uv
+        uses: astral-sh/setup-uv@v5
 
-        - name: install uv project dependencies
-          run: |
-            uv sync --locked --all-extras --dev
+      - name: install uv project dependencies
+        run: |
+          uv sync --locked --all-extras --dev
 
-        - name: run test suite
-          run: |
-            set -o pipefail
-            uv run pytest \
-              --cov=. test/ \
-              --cov-fail-under=100 \
-              --junitxml=pytest.xml \
-              | tee pytest-coverage.txt
+      - name: run test suite
+        run: |
+          set -o pipefail
+          uv run pytest \
+            --cov=. test/ \
+            --cov-fail-under=100 \
+            --junitxml=pytest.xml \
+            | tee pytest-coverage.txt
 
-        - name: pytest coverage comment
-          if: always()
-          uses: MishaKav/pytest-coverage-comment@main
-          with:
-              pytest-coverage-path: ./pytest-coverage.txt
-              junitxml-path: ./pytest.xml
+      - name: pytest coverage comment
+        if: always()
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
