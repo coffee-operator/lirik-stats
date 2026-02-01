@@ -26,8 +26,8 @@ jobs:
           uv sync --locked --all-extras --dev
 
       - name: run test suite
-        continue-on-error: true
         run: |
+          set -o pipefail
           uv run pytest \
             --cov=. test/ \
             --cov-fail-under=100 \

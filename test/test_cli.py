@@ -21,6 +21,6 @@ def test_parse_cli_args(
     args = parse_cli_args(cli_args)
 
     # Assert
-    assert args.key_file_path != key_file_path
+    assert args.key_file_path == key_file_path
     assert args.channel_id == channel_id
     assert args.channel_folder_name == channel_folder_name
