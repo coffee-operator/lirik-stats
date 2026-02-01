@@ -28,7 +28,7 @@ jobs:
           run: |
             set -o pipefail
             uv run pytest \
-              --cov=youtube/ test/ \
+              --cov=. test/ \
               --cov-fail-under=100 \
               --junitxml=pytest.xml \
               | tee pytest-coverage.txt
