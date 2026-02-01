@@ -22,7 +22,12 @@ jobs:
 
         - name: run test suite
           run: |
-            uv run pytest --cov=youtube/ test/ --cov-report=term-missing:skip-covered --junitxml=pytest.xml | tee pytest-coverage.txt
+            uv run pytest \
+              --cov=youtube/ test/ \
+              --cov-report=term-missing:skip-covered \
+              --cov-fail-under=100 \
+              --junitxml=pytest.xml \
+              | tee pytest-coverage.txt
 
         - name: pytest coverage comment
           uses: MishaKav/pytest-coverage-comment@main
