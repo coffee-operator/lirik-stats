@@ -1,18 +1,19 @@
 name: ci
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
+  checks: write
 
 jobs:
   test:
-    if: |
-      github.event_name == 'pull_request' ||
-      github.event_name == 'workflow_dispath' ||
-      (github.event_name == 'push' && github.ref_name == 'main')
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -28,15 +29,28 @@ jobs:
       - name: run test suite
         run: |
           set -o pipefail
-          uv run pytest -v \
+          uv run pytest -v --tb=long \
             --cov=. test/ \
             --cov-fail-under=100 \
-            --junitxml=pytest.xml \
-            | tee pytest-coverage.txt
+            --cov-report=xml \
+            --junitxml=pytest.xml
 
       - name: pytest coverage comment
         if: always()
         uses: MishaKav/pytest-coverage-comment@main
         with:
-          pytest-coverage-path: ./pytest-coverage.txt
+          pytest-xml-coverage-path: ./coverage.xml
           junitxml-path: ./pytest.xml
+          badge-title: Coverage
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: astral-sh/ruff-action@v3
+      - run: ruff check --fix .
+      - run: ruff format .
