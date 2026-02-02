@@ -52,5 +52,5 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - uses: astral-sh/ruff-action@v3
-      - run: ruff check --fix .
-      - run: ruff format .
+        with:
+            args: "format --check --diff"
