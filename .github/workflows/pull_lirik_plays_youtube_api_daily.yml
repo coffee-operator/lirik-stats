@@ -1,0 +1,51 @@
+name: pull_lirik_plays_youtube_api_daily
+
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  KEY_FILE_PATH: ./youtube/key.json
+  CHANNEL_ID: UCebh6Np0l-DT9LXHrXbmopg
+  CHANNEL_FOLDER_NAME: lirik_plays
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: install uv project dependencies
+        run: |
+          uv sync --locked --all-extras --dev
+
+      - name: retrieve API credential
+        run: |
+          echo ${{ secrets.YOUTUBE_API_CREDENTIAL }} | base64 -d > "$KEY_FILE_PATH"
+
+      - name: stage - get data
+        run: |
+          uv run "main.py" \
+            --key_file_path "$KEY_FILE_PATH" \
+            --channel_id $CHANNEL_ID \
+            --channel_folder_name $CHANNEL_FOLDER_NAME
+
+          GIT_STATUS=$(git status --porcelain)
+          echo $GIT_STATUS
+
+      - name: commit, pull & push
+        run: |
+          git add -A
+          git commit -m "updating latest data" || exit 0
+          git pull
+          git push
