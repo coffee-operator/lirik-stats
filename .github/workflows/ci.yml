@@ -21,6 +21,9 @@ jobs:
 
       - name: install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: install uv project dependencies
         run: |
