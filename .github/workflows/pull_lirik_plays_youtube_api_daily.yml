@@ -48,6 +48,8 @@ jobs:
 
       - name: commit, pull & push
         run: |
+          git config --global user.email coffee-operator-github-action@gmail.com
+          git config --global user.name coffee-operator-github-action
           git add -A
           git commit -m "updating latest data" || exit 0
           git pull
